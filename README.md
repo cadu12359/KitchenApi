@@ -45,10 +45,6 @@ Dentro da pasta raiz do projeto, rode o comando do Docker Compose
   docker-compose up --build
 ```
 
-Após alguns minutos e a finalização, acesse a aplicaçao front end **Kitchen** através do navegador pelo endereço
-
-[http://localhost:3000/](http://localhost:3000/)
-
 Acesse **o Swagger da API** através do navegador pelo endereço
 
 [http://localhost:8080/swagger/index.html](http://localhost:8080/swagger/index.html)
