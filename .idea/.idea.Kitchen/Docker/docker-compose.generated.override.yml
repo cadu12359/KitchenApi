@@ -1,0 +1,21 @@
+# This is a generated file. Not intended for manual editing.
+version: "3.8"
+services:
+  api:
+    build:
+      context: "C:\\projects\\KitchenApi"
+      dockerfile: "Kitchen.API/Dockerfile"
+      target: "base"
+    command: []
+    entrypoint:
+    - "dotnet"
+    - "/app/bin/Debug/net9.0/Kitchen.API.dll"
+    environment:
+      DOTNET_USE_POLLING_FILE_WATCHER: "true"
+    image: "kitchen.api:dev"
+    ports: []
+    volumes:
+    - "C:\\Users\\eduar\\.nuget\\packages:/home/app/.nuget/packages"
+    - "C:\\projects\\KitchenApi\\Kitchen.API:/app:rw"
+    - "C:\\projects\\KitchenApi:/src:rw"
+    working_dir: "/app"

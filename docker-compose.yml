@@ -1,0 +1,67 @@
+﻿version: '3.8'
+
+services:
+  db:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    container_name: sqlserver
+    environment:
+      SA_PASSWORD: "@Password123" 
+      ACCEPT_EULA: "Y"
+    ports:
+      - "1433:1433" 
+    volumes:
+      - sqlserverdata:/var/opt/mssql 
+    networks:
+      - kitchen_network
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672" 
+    environment:
+      RABBITMQ_DEFAULT_USER: "guest" 
+      RABBITMQ_DEFAULT_PASS: "guest"
+    networks:
+      - kitchen_network
+
+  api:
+    build:
+      context: .
+      dockerfile: Kitchen.API/Dockerfile
+    container_name: kitchen_api
+    ports:
+      - "8080:8080" 
+      - "8081:8081" 
+    depends_on:
+      - db
+      - rabbitmq
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=Server=db;Database=KitchenDB;User Id=sa;Password=@Password123;TrustServerCertificate=True;
+      - RabbitMQ__HostName=rabbitmq
+      - RabbitMQ__UserName=guest
+      - RabbitMQ__Password=guest
+      - APP_UID=1000 
+    networks:
+      - kitchen_network
+        
+  frontend:
+    build:
+      context: ./front-end
+      dockerfile: Dockerfile
+    container_name: kitchen_frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - api
+    networks:
+      - kitchen_network
+
+volumes:
+  sqlserverdata: 
+
+networks:
+  kitchen_network:
+    driver: bridge
